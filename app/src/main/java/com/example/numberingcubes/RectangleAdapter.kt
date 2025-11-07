@@ -6,14 +6,13 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import android.graphics.Color
 import android.view.LayoutInflater
+import android.content.Intent
 import androidx.recyclerview.widget.RecyclerView
-import com.example.numberingcubes.R
 
 class RectangleAdapter : RecyclerView.Adapter<RectangleAdapter.RectangleViewHolder>() {
     private var itemCount = 0
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType : Int) : RectangleViewHolder{
-
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RectangleViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         val newRectangle = inflater.inflate(R.layout.cubes, parent, false)
         return RectangleViewHolder(newRectangle)
@@ -27,26 +26,40 @@ class RectangleAdapter : RecyclerView.Adapter<RectangleAdapter.RectangleViewHold
         return itemCount
     }
 
-    fun AddItem(){
+    fun AddItem() {
         itemCount++
         notifyItemInserted(itemCount - 1)
     }
 
-    class RectangleViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
+    class RectangleViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val numberText: TextView = itemView.findViewById(R.id.numberText)
         private val container: LinearLayout = itemView as LinearLayout
 
-        fun bind (coordinates : Int){
+        fun bind(coordinates: Int) {
             val number = coordinates + 1
             numberText.text = number.toString()
             val colorRectangle = if (number % 2 == 0) {
-                Color.RED }
-            else{
+                Color.RED
+            } else {
                 Color.BLUE
             }
             val textColor = Color.WHITE
             container.setBackgroundColor(colorRectangle)
             numberText.setTextColor(textColor)
+
+            itemView.setOnClickListener {
+                openDetailActivity(number, colorRectangle)
+            }
+        }
+
+        private fun openDetailActivity(number: Int, backgroundColor: Int) {
+            val context = itemView.context
+            val intent = Intent(context, SquareDetailActivity::class.java).apply {
+                putExtra("NUMBER", number)
+                putExtra("BACKGROUND_COLOR", backgroundColor)
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK
+            }
+            context.startActivity(intent)
         }
     }
 }

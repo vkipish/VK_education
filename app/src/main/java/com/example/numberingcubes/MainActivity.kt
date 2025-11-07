@@ -22,7 +22,7 @@ class MainActivity : AppCompatActivity() {
         SetupRecyclerView()
 
         val button = findViewById<Button>(R.id.addButton)
-        button.text = "+"
+        button.text = "добавить квадрат"
         button.setOnClickListener {
             adapter.AddItem()
         }
