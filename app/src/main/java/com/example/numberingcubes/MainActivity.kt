@@ -16,18 +16,32 @@ class MainActivity : AppCompatActivity() {
         supportActionBar?.hide()
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
         recyclerView = findViewById(R.id.recyclerView)
         adapter = RectangleAdapter()
+
+        if (savedInstanceState != null) {
+            val savedCount = savedInstanceState.getInt("squares_count", 0)
+            if (savedCount > 0) {
+                adapter.setCount(savedCount)
+            }
+        }
 
         SetupRecyclerView()
 
         val button = findViewById<Button>(R.id.addButton)
-        button.text = "добавить квадрат"
+        button.text = "+"
         button.setOnClickListener {
             adapter.AddItem()
         }
     }
-    fun SetupRecyclerView(){
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putInt("squares_count", adapter.getCurrentCount())
+    }
+
+    fun SetupRecyclerView() {
         val Landscape = resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
         val spanCount = if (Landscape) 4 else 3
         recyclerView.layoutManager = GridLayoutManager(this, spanCount)
